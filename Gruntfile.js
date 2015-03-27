@@ -49,7 +49,7 @@ module.exports = function (grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        'dist/secure/runner.js',
+                        'dist/secure/*',
                         '!dist/.git*'
                     ]
                 }]
@@ -85,13 +85,9 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: 'secure',
-                    dest: 'dist',
+                    dest: 'dist/secure',
                     src: [
-                        '*.{ico,png,txt}',
-                        '.htaccess',
-                        '*.html',
-                        'images/{,*/}*.{webp,gif}',
-                        'styles/fonts/{,*/}*.*'
+                        'index.html'
                     ]
                 }]
             }
@@ -133,9 +129,9 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('build', [
-//        'clean:dist',
-        'uglify'//,
-//        'copy:dist',
+        'clean:dist',
+        'uglify',
+        'copy:dist'
 //        'rev'
     ]);
 

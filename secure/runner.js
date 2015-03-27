@@ -22,25 +22,33 @@
     if (iframe) {
       iframe.setAttribute('height', '');
       var docHeight = doc.height || doc.documentElement.scrollHeight;
-      var height = docHeight && docHeight > 0 ? docHeight : '100%';
+      var height = docHeight && docHeight > 0 ? docHeight : '400';
+      console.log('setting height: ' + height);
       iframe.setAttribute('height', height);
     }
   }
 
   // Remove the old iframe and create a new one.
-  function reset () {
+  function reset (height) {
     if (iframe) body.removeChild(iframe);
     iframe = doc.createElement('iframe');
     iframe.setAttribute('width', '100%');
     if (typeof sandbox === 'string') iframe.setAttribute('sandbox', sandbox);
-    setHeight();
+
+    var docHeight = doc.height || doc.documentElement.scrollHeight;
+    iframe.setAttribute('height', height);
+
     body.appendChild(iframe);
   }
 
   // Create an iframe and load html into it. Post back with a `load` event
   // when the iframe has loaded.
   function load (html) {
-    reset();
+    var regex = /data-stuff-height="(\d+)"/;
+    var matched = regex.exec(html);
+    var height = matched.length > 1 ? matched[1] :  "400";
+
+    reset(height);
     iframe.addEventListener('load', function () {
       post('load', null);
     }, false);
@@ -149,9 +157,6 @@
       actions[type](data);  
     }
   }, false);
-
-  // Adapt to outer iframe resizes.
-  win.addEventListener('resize', setHeight);
 
   // Export an emit funciton on this window that could be accessible to the
   // iframe context to emit events to the parent window.
